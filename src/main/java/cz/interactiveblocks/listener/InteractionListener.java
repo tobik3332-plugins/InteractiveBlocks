@@ -29,7 +29,7 @@ public class InteractionListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
-        // Ignorujeme sekundární event z vedlejší ruky (OFF_HAND), aby se akce nespouštěla dvakrát při pravém kliku
+        // Ignorujeme sekundární event z vedlejší ruky (OFF_HAND)
         if (event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         Block clickedBlock = event.getClickedBlock();
@@ -55,7 +55,7 @@ public class InteractionListener implements Listener {
             return;
         }
 
-        // Kontrola Cooldownu (převedeno na milisekundy pro podporu desetinných čísel)
+        // Kontrola Cooldownu
         if (iblock.getCooldown() > 0) {
             long lastUse = getCooldown(player.getUniqueId(), iblock.getName());
             long cooldownInMillis = (long) (iblock.getCooldown() * 1000);
@@ -77,7 +77,7 @@ public class InteractionListener implements Listener {
             executeCommand(player, cmd);
         }
 
-        // Vykonání Zpráv (s kompletní podporou pro barevné kódy, HEX i MiniMessage)
+        // Vykonání Zpráv
         for (String msg : iblock.getMessages()) {
             executeMessage(player, msg);
         }

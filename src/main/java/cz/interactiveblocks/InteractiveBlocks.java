@@ -1,9 +1,9 @@
 package cz.interactiveblocks;
 
 import cz.interactiveblocks.command.IBlocksCommand;
-import cz.interactiveblocks.command.IBlocksTabCompleter;
 import cz.interactiveblocks.config.BlockManager;
 import cz.interactiveblocks.config.ConfigManager;
+import cz.interactiveblocks.listener.BlockProtectionListener;
 import cz.interactiveblocks.listener.InteractionListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,23 +14,20 @@ public final class InteractiveBlocks extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Načtení Konfigurací
+        // Načtení konfigurace
         this.configManager = new ConfigManager(this);
         this.blockManager = new BlockManager(this);
 
-        // Registrace Listeneru
-        getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
-
-        // Registrace Příkazů
-        IBlocksCommand cmdExecutor = new IBlocksCommand(this);
-        IBlocksTabCompleter tabCompleter = new IBlocksTabCompleter(this);
-
+        // Registrace příkazů
         if (getCommand("iblocks") != null) {
-            getCommand("iblocks").setExecutor(cmdExecutor);
-            getCommand("iblocks").setTabCompleter(tabCompleter);
+            getCommand("iblocks").setExecutor(new IBlocksCommand(this));
         }
 
-        getLogger().info("InteractiveBlocks plugin byl uspesne nacten a aktivovan!");
+        // Registrace listenerů
+        getServer().getPluginManager().registerEvents(new InteractionListener(this), this);
+        getServer().getPluginManager().registerEvents(new BlockProtectionListener(this), this);
+
+        getLogger().info("InteractiveBlocks byl uspesne aktivovan!");
     }
 
     @Override
@@ -38,9 +35,14 @@ public final class InteractiveBlocks extends JavaPlugin {
         if (blockManager != null) {
             blockManager.saveBlocks();
         }
-        getLogger().info("InteractiveBlocks plugin byl uspesne vypnut.");
+        getLogger().info("InteractiveBlocks byl uspesne deaktivovan!");
     }
 
-    public ConfigManager getConfigManager() { return configManager; }
-    public BlockManager getBlockManager() { return blockManager; }
+    public ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    public BlockManager getBlockManager() {
+        return blockManager;
+    }
 }

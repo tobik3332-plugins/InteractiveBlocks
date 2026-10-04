@@ -18,9 +18,11 @@ public final class InteractiveBlocks extends JavaPlugin {
         this.configManager = new ConfigManager(this);
         this.blockManager = new BlockManager(this);
 
-        // Registrace příkazů
+        // Registrace příkazů a TabCompleteru
         if (getCommand("iblocks") != null) {
-            getCommand("iblocks").setExecutor(new IBlocksCommand(this));
+            IBlocksCommand cmdExecutor = new IBlocksCommand(this);
+            getCommand("iblocks").setExecutor(cmdExecutor);
+            getCommand("iblocks").setTabCompleter(cmdExecutor);
         }
 
         // Registrace listenerů

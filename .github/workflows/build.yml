@@ -1,0 +1,42 @@
+name: Build InteractiveBlocks Plugin
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Calculate Dynamic Version
+        id: versioning
+        run: |
+          RUN_NUM=${{ github.run_number }}
+          MAJOR=1
+          MINOR=$((RUN_NUM / 10))
+          PATCH=$((RUN_NUM % 10))
+          VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "CALCULATED_VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "Version calculated: ${VERSION}"
+
+      - name: Build with Maven
+        run: mvn clean package -Dbuild.version=${{ env.CALCULATED_VERSION }}
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: InteractiveBlocks-${{ env.CALCULATED_VERSION }}
+          path: target/InteractiveBlocks-${{ env.CALCULATED_VERSION }}.jar

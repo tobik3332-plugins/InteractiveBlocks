@@ -1,0 +1,18 @@
+name: InteractiveBlocks
+version: '${project.version}'
+main: cz.interactiveblocks.InteractiveBlocks
+api-version: '1.21'
+author: InteractiveBlocksTeam
+description: Plugin pro přizpůsobitelné interaktivní bloky spouštějící příkazy a zprávy.
+
+commands:
+  iblocks:
+    description: Hlavní příkaz pro správy pluginu InteractiveBlocks.
+    aliases: [iblock]
+    permission: iblocks.admin
+    usage: /iblocks <create|delete|list|edit|reload>
+
+permissions:
+  iblocks.admin:
+    description: Umožňuje kompletní správy pluginu InteractiveBlocks a editaci bloků.
+    default: op

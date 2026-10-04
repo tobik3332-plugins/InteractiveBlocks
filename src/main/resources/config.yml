@@ -1,0 +1,46 @@
+# ========================================================
+#       InteractiveBlocks - Hlavní Konfigurace
+# ========================================================
+# Podpora formátování: Klasické barevné kódy (&a, &c, &l atd.), HEX kódy (&#123456) a MiniMessage (<green>).
+
+messages:
+  prefix: "&8[&bInteractiveBlocks&8] "
+  no-permission: "&cNa tento příkaz nemáš dostatečná oprávnění!"
+  no-block-permission: "&cNemáš oprávnění k interakci s tímto blokem!"
+  reload-success: "&aKonfigurace a bloky byly úspěšně načteny."
+  only-player: "&cTento příkaz může použít pouze hráč ve hře."
+  target-not-block: "&cMusíš se dívat na platný blok!"
+  block-already-exists: "&cBlok s tímto názvem již existuje!"
+  block-not-found: "&cBlok s tímto názvem nebyl nalezen!"
+  block-created: "&aInteraktivní blok &e%name% &abyl úspěšně vytvořen na tvé pozici pohledu!"
+  block-deleted: "&aBlok &e%name% &abyl úspěšně odstraněn."
+  cooldown: "&cMusíš počkat ještě &e%time%s &cpřed další interakcí!"
+  invalid-interaction-type: "&cNeplatný typ interakce! Použij: LEFT_CLICK, RIGHT_CLICK nebo CLICK."
+  invalid-number: "&cZadaná hodnota musí být číslo!"
+  invalid-index: "&cPříkaz/Zpráva s tímto ID neexistuje!"
+  
+  # Nastavení úprav bloku
+  edit-permission: "&aPermise bloku &e%name% &abyla změněna na: &f%value%"
+  edit-cooldown: "&aCooldown bloku &e%name% &abyl změněn na: &f%value%s"
+  edit-type: "&aTyp interakce bloku &e%name% &abyl změněn na: &f%value%"
+  add-command-success: "&aPříkaz &f[%type%] %command% &abyl přidán k bloku &e%name%&a."
+  delete-command-success: "&aPříkaz s ID &e#%id% &abyl odebrán z bloku &e%name%&a."
+  add-message-success: "&aZpráva &f[%type%] %message% &abyla přidána k bloku &e%name%&a."
+  delete-message-success: "&aZpráva s ID &e#%id% &abyla odebrána z bloku &e%name%&a."
+
+  # Vzhled /iblocks list
+  list-header: "&8&m--------&r &bSeznam Interaktivních Bloků &8&m--------"
+  list-format: "&e%name% &8- &fMaterial: &a%material% &8| &fPozice: &7%world%, %x%, %y%, %z%"
+  list-footer: "&8&m---------------------------------------"
+  list-empty: "&7Zatím nebyly vytvořeny žádné interaktivní bloky."
+
+# ========================================================
+#                  PŘEHLED PERMISÍ
+# ========================================================
+# 1. iblocks.admin
+#    - Popis: Dává kompletní přístup ke všem příkazům (/iblocks create, edit, delete, list, reload).
+#    - Výchozí nastavení: OP hráči.
+#
+# 2. Dynamic Permise
+#    - Popis: Hráč musí mít vlastnoručně nastavenou permisi v iblocks.yml u konkrétního bloku (pole 'permission'),
+#      aby na něj mohl kliknout. Pokud je hodnota "none", blok může použít každý.

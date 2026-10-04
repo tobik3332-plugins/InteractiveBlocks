@@ -13,13 +13,13 @@ public class InteractiveBlock {
     private int x;
     private int y;
     private int z;
-    private int cooldown;
+    private double cooldown;
     private InteractionType interactionType;
     private String permission;
     private List<String> commands;
     private List<String> messages;
 
-    public InteractiveBlock(String name, Material material, String world, int x, int y, int z, int cooldown, InteractionType interactionType, String permission, List<String> commands, List<String> messages) {
+    public InteractiveBlock(String name, Material material, String world, int x, int y, int z, double cooldown, InteractionType interactionType, String permission, List<String> commands, List<String> messages) {
         this.name = name;
         this.material = material;
         this.world = world;
@@ -39,8 +39,8 @@ public class InteractiveBlock {
     public int getX() { return x; }
     public int getY() { return y; }
     public int getZ() { return z; }
-    public int getCooldown() { return cooldown; }
-    public void setCooldown(int cooldown) { this.cooldown = cooldown; }
+    public double getCooldown() { return cooldown; }
+    public void setCooldown(double cooldown) { this.cooldown = cooldown; }
     public InteractionType getInteractionType() { return interactionType; }
     public void setInteractionType(InteractionType interactionType) { this.interactionType = interactionType; }
     public String getPermission() { return permission; }

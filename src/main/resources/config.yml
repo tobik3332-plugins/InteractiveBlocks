@@ -16,7 +16,7 @@ messages:
   block-deleted: "&aBlok &e%name% &abyl úspěšně odstraněn."
   cooldown: "&cMusíš počkat ještě &e%time%s &cpřed další interakcí!"
   invalid-interaction-type: "&cNeplatný typ interakce! Použij: LEFT_CLICK, RIGHT_CLICK nebo CLICK."
-  invalid-number: "&cZadaná hodnota musí být číslo!"
+  invalid-number: "&cZadaná hodnota musí být platné číslo (např. 5 nebo 0.5)!"
   invalid-index: "&cPříkaz/Zpráva s tímto ID neexistuje!"
   
   # Nastavení úprav bloku

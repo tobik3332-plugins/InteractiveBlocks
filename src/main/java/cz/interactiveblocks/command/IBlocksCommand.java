@@ -135,7 +135,7 @@ public class IBlocksCommand implements CommandExecutor {
 
             case "cooldown":
                 try {
-                    int cd = Integer.parseInt(args[3]);
+                    double cd = Double.parseDouble(args[3]);
                     block.setCooldown(cd);
                     plugin.getBlockManager().saveBlocks();
                     sender.sendMessage(plugin.getConfigManager().getMessage("edit-cooldown")

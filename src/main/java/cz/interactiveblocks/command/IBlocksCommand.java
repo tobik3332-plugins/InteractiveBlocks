@@ -8,11 +8,14 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class IBlocksCommand implements CommandExecutor {
+public class IBlocksCommand implements CommandExecutor, TabCompleter {
 
     private final InteractiveBlocks plugin;
 
@@ -159,7 +162,7 @@ public class IBlocksCommand implements CommandExecutor {
 
             case "addcommand":
                 if (args.length < 5) {
-                    sender.sendMessage(ColorUtils.colorize("&cPoužití: /iblock edit <název> addcommand <player/console> <příkaz>"));
+                    sender.sendMessage(ColorUtils.colorize("&cPoužití: /iblocks edit <název> addcommand <player/console> <příkaz>"));
                     return;
                 }
                 String cmdType = args[3].toLowerCase();
@@ -193,7 +196,7 @@ public class IBlocksCommand implements CommandExecutor {
 
             case "addmessage":
                 if (args.length < 5) {
-                    sender.sendMessage(ColorUtils.colorize("&cPoužití: /iblock edit <název> addmessage <message/broadcast> <zpráva>"));
+                    sender.sendMessage(ColorUtils.colorize("&cPoužití: /iblocks edit <název> addmessage <message/broadcast> <zpráva>"));
                     return;
                 }
                 String msgType = args[3].toLowerCase();
@@ -243,13 +246,92 @@ public class IBlocksCommand implements CommandExecutor {
 
     private void sendEditHelp(CommandSender sender) {
         sender.sendMessage(ColorUtils.colorize("&8&m--------&r &bInteractiveBlocks Editace &8&m--------"));
-        sender.sendMessage(ColorUtils.colorize("&e/iblock edit <název> permission <permise>"));
-        sender.sendMessage(ColorUtils.colorize("&e/iblock edit <název> cooldown <sekundy>"));
-        sender.sendMessage(ColorUtils.colorize("&e/iblock edit <název> interaction-type <LEFT_CLICK|RIGHT_CLICK|CLICK>"));
-        sender.sendMessage(ColorUtils.colorize("&e/iblock edit <název> addcommand <player|console> <příkaz>"));
-        sender.sendMessage(ColorUtils.colorize("&e/iblock edit <název> deletecommand <id>"));
-        sender.sendMessage(ColorUtils.colorize("&e/iblock edit <název> addmessage <message|broadcast> <zpráva>"));
-        sender.sendMessage(ColorUtils.colorize("&e/iblock edit <název> deletemessage <id>"));
+        sender.sendMessage(ColorUtils.colorize("&e/iblocks edit <název> permission <permise>"));
+        sender.sendMessage(ColorUtils.colorize("&e/iblocks edit <název> cooldown <sekundy>"));
+        sender.sendMessage(ColorUtils.colorize("&e/iblocks edit <název> interaction-type <LEFT_CLICK|RIGHT_CLICK|CLICK>"));
+        sender.sendMessage(ColorUtils.colorize("&e/iblocks edit <název> addcommand <player|console> <příkaz>"));
+        sender.sendMessage(ColorUtils.colorize("&e/iblocks edit <název> deletecommand <id>"));
+        sender.sendMessage(ColorUtils.colorize("&e/iblocks edit <název> addmessage <message|broadcast> <zpráva>"));
+        sender.sendMessage(ColorUtils.colorize("&e/iblocks edit <název> deletemessage <id>"));
         sender.sendMessage(ColorUtils.colorize("&8&m---------------------------------------"));
+    }
+
+    // ========================================================
+    //                     TAB COMPLETER
+    // ========================================================
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (!sender.hasPermission("iblocks.admin")) {
+            return List.of();
+        }
+
+        List<String> completions = new ArrayList<>();
+
+        if (args.length == 1) {
+            completions.addAll(List.of("create", "delete", "edit", "list", "reload"));
+            return filterPrefix(completions, args[0]);
+        }
+
+        if (args.length == 2) {
+            String sub = args[0].toLowerCase();
+            if (sub.equals("delete") || sub.equals("edit")) {
+                for (InteractiveBlock b : plugin.getBlockManager().getAllBlocks()) {
+                    completions.add(b.getName());
+                }
+                return filterPrefix(completions, args[1]);
+            }
+            if (sub.equals("create")) {
+                return List.of("<název_bloku>");
+            }
+        }
+
+        if (args.length == 3 && args[0].equalsIgnoreCase("edit")) {
+            completions.addAll(List.of("permission", "cooldown", "interaction-type", "addcommand", "deletecommand", "addmessage", "deletemessage"));
+            return filterPrefix(completions, args[2]);
+        }
+
+        if (args.length == 4 && args[0].equalsIgnoreCase("edit")) {
+            String editType = args[2].toLowerCase();
+            switch (editType) {
+                case "interaction-type":
+                    completions.addAll(List.of("LEFT_CLICK", "RIGHT_CLICK", "CLICK"));
+                    break;
+                case "addcommand":
+                    completions.addAll(List.of("player", "console"));
+                    break;
+                case "addmessage":
+                    completions.addAll(List.of("message", "broadcast"));
+                    break;
+                case "permission":
+                    completions.add("none");
+                    break;
+                case "cooldown":
+                    completions.addAll(List.of("0.0", "0.5", "1.0", "5.0"));
+                    break;
+                case "deletecommand":
+                case "deletemessage":
+                    InteractiveBlock block = plugin.getBlockManager().getBlockByName(args[1]);
+                    if (block != null) {
+                        int count = editType.equals("deletecommand") ? block.getCommands().size() : block.getMessages().size();
+                        for (int i = 1; i <= count; i++) {
+                            completions.add(String.valueOf(i));
+                        }
+                    }
+                    break;
+            }
+            return filterPrefix(completions, args[3]);
+        }
+
+        return List.of();
+    }
+
+    private List<String> filterPrefix(List<String> list, String prefix) {
+        List<String> result = new ArrayList<>();
+        for (String s : list) {
+            if (s.toLowerCase().startsWith(prefix.toLowerCase())) {
+                result.add(s);
+            }
+        }
+        return result;
     }
 }

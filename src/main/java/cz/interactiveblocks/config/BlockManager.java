@@ -44,7 +44,7 @@ public class BlockManager {
             int x = sec.getInt("x");
             int y = sec.getInt("y");
             int z = sec.getInt("z");
-            int cooldown = sec.getInt("cooldown", 0);
+            double cooldown = sec.getDouble("cooldown", 0.0);
             InteractionType type = InteractionType.fromString(sec.getString("interaction-type", "CLICK"));
             if (type == null) type = InteractionType.CLICK;
 
@@ -92,7 +92,7 @@ public class BlockManager {
                 loc.getBlockX(),
                 loc.getBlockY(),
                 loc.getBlockZ(),
-                0,
+                0.0,
                 InteractionType.CLICK,
                 "none",
                 new ArrayList<>(),

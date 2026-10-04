@@ -11,8 +11,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,6 +29,9 @@ public class InteractionListener implements Listener {
 
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
+        // Ignorujeme sekundární event z vedlejší ruky (OFF_HAND), aby se akce nespouštěla dvakrát při pravém kliku
+        if (event.getHand() == EquipmentSlot.OFF_HAND) return;
+
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) return;
 
@@ -50,13 +55,16 @@ public class InteractionListener implements Listener {
             return;
         }
 
-        // Kontrola Cooldownu
+        // Kontrola Cooldownu (převedeno na milisekundy pro podporu desetinných čísel)
         if (iblock.getCooldown() > 0) {
             long lastUse = getCooldown(player.getUniqueId(), iblock.getName());
-            long timePassed = (System.currentTimeMillis() - lastUse) / 1000;
-            if (timePassed < iblock.getCooldown()) {
-                long timeLeft = iblock.getCooldown() - timePassed;
-                player.sendMessage(plugin.getConfigManager().getMessage("cooldown").replace("%time%", String.valueOf(timeLeft)));
+            long cooldownInMillis = (long) (iblock.getCooldown() * 1000);
+            long timePassed = System.currentTimeMillis() - lastUse;
+
+            if (timePassed < cooldownInMillis) {
+                double timeLeft = (cooldownInMillis - timePassed) / 1000.0;
+                String formattedTime = String.format(Locale.US, "%.1f", timeLeft);
+                player.sendMessage(plugin.getConfigManager().getMessage("cooldown").replace("%time%", formattedTime));
                 return;
             }
         }
@@ -69,7 +77,7 @@ public class InteractionListener implements Listener {
             executeCommand(player, cmd);
         }
 
-        // Vykonání Zpráv
+        // Vykonání Zpráv (s kompletní podporou pro barevné kódy, HEX i MiniMessage)
         for (String msg : iblock.getMessages()) {
             executeMessage(player, msg);
         }
